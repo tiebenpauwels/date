@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Een vraagje voor jou</title>
+<style>
+
+  /* ============================================================
+     PAS HIER ZELF DE NAMEN AAN
+     ============================================================ */
+  /* Zoek in de HTML hieronder naar [JOUW NAAM] en [HAAR NAAM]
+     en vervang die door de echte namen. */
+
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root{
+    --paper: #f3f1fa;
+    --paper-edge: #dcd3f0;
+    --ink: #2f2a3d;
+    --wine: #2ea0a0;
+    --wine-deep: #1f7a7a;
+    --blush: #f3b6d3;
+    --gold: #b98fd1;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100%;
+    background:
+      radial-gradient(ellipse at top left, #faf8fd 0%, var(--paper) 55%, var(--paper-edge) 100%);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--ink);
+    overflow-x:hidden;
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 18px;
+  }
+
+  /* subtiele papiertextuur via gestapelde gradients */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(46,160,160,0.05) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(185,143,209,0.07) 0, transparent 40%);
+    pointer-events:none;
+  }
+
+  .card{
+    position:relative;
+    max-width: 480px;
+    width:100%;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 30px 60px -20px rgba(58,42,46,0.35);
+    padding: 56px 40px 48px;
+    text-align:center;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border:1px solid var(--gold);
+    opacity:0.35;
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    font-family:'Caveat', cursive;
+    font-size: 1.45rem;
+    line-height: 1.3;
+    color: var(--wine);
+    margin: 0 12px 2px;
+    transform: rotate(-1deg);
+  }
+
+  .quote-source{
+    font-family:'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color:#9b8fae;
+    margin: 0 0 22px;
+  }
+
+  h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+    line-height:1.25;
+    margin: 0 0 8px;
+    color: var(--wine-deep);
+  }
+
+  .from{
+    font-size:1.05rem;
+    color:#6e6480;
+    margin: 0 0 30px;
+  }
+
+  .divider{
+    width:64px;
+    height:1px;
+    background: var(--gold);
+    opacity:0.5;
+    margin: 0 auto 30px;
+  }
+
+  form{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 18px;
+  }
+
+  .btn-row{
+    display:flex;
+    gap:16px;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    min-height: 64px;
+    width:100%;
+  }
+
+  button{
+    font-family:'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    padding: 14px 30px;
+    border-radius: 2px;
+    cursor:pointer;
+    letter-spacing: 0.02em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  }
+
+  #yes{
+    background: var(--wine);
+    color: var(--paper);
+    border: 1px solid var(--wine);
+    font-style: italic;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
+    padding-right: 38px;
+  }
+  #yes:hover{
+    background: var(--wine-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(31,122,122,0.45);
+  }
+
+  #no{
+    background: transparent;
+    color: #9b8fae;
+    border: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    padding: 14px 10px;
+    position: relative;
+  }
+  #no:hover{
+    text-decoration-color: #9b8fae;
+  }
+
+  .result{
+    display:none;
+    font-family:'Caveat', cursive;
+    font-size: 1.8rem;
+    color: var(--wine);
+    margin-top: 6px;
+  }
+
+  .result.show{
+    display:block;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(10px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .heart{
+    position:fixed;
+    pointer-events:none;
+    font-size: 1.2rem;
+    color: var(--blush);
+    opacity:0.9;
+    z-index: 5;
+    user-select:none;
+  }
+
+  .card.confirmed .form-hide{
+    display:none;
+  }
+
+  footer-note{
+    display:block;
+  }
+
+  .fine{
+    margin-top: 26px;
+    font-size: 0.85rem;
+    color:#a99cc0;
+    font-style: italic;
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="card" id="card">
+    <p class="eyebrow">&ldquo;Love looks not with the eyes, but with the mind.&rdquo;</p>
+    <p class="quote-source">&mdash; Shakespeare</p>
+    <h1>Heb je toevallig een gaatje voor mij deze week, [HAAR NAAM]?</h1>
+    <p class="from">&mdash; [JOUW NAAM]</p>
+    <div class="divider"></div>
+
+    <!--
+      NETLIFY FORM
+      Zorg dat "Forms" aanstaat in je Netlify site settings (staat al aan volgens jou).
+      Netlify herkent dit formulier automatisch bij deploy dankzij data-netlify="true".
+      Stel de e-mailnotificatie in via: Site settings → Forms → Form notifications → Email notification.
+    -->
+    <form
+      id="dateForm"
+      name="date-antwoord"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+    >
+      <input type="hidden" name="form-name" value="date-antwoord" />
+      <p style="display:none">
+        <label>Vul dit niet in: <input name="bot-field" /></label>
+      </p>
+
+      <input type="hidden" id="answerField" name="antwoord" value="" />
+
+      <div class="btn-row form-hide">
+        <button type="button" id="yes">Ja, ik maak tijd</button>
+        <button type="button" id="no">Nog niet overtuigd</button>
+      </div>
+    </form>
+
+    <p class="result" id="result"></p>
+
+    <p class="fine">jouw antwoord wordt direct naar [JOUW NAAM] gestuurd</p>
+  </div>
+
+<script>
+  const card = document.getElementById('card');
+  const form = document.getElementById('dateForm');
+  const answerField = document.getElementById('answerField');
+  const result = document.getElementById('result');
+  const yesBtn = document.getElementById('yes');
+  const noBtn = document.getElementById('no');
+
+  // "Nee"-knop loopt weg van de muis, blijft binnen de kaart
+  noBtn.addEventListener('mousemove', () => {
+    const maxX = 90, maxY = 24;
+    const x = (Math.random() - 0.5) * 2 * maxX;
+    const y = (Math.random() - 0.5) * 2 * maxY;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  // Op mobiel (geen hover): laat 'm ook wegspringen bij tik
+  noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const maxX = 70, maxY = 20;
+    const x = (Math.random() - 0.5) * 2 * maxX;
+    const y = (Math.random() - 0.5) * 2 * maxY;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  }, { passive: false });
+
+  function submitAnswer(value, label){
+    answerField.value = value;
+
+    const data = new FormData(form);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    }).catch(() => { /* stille fout, we tonen sowieso het bedankscherm */ });
+
+    card.classList.add('confirmed');
+    result.textContent = label;
+    result.classList.add('show');
+
+    if(value === 'ja'){
+      launchHearts();
+    }
+  }
+
+  yesBtn.addEventListener('click', () => {
+    submitAnswer('ja', 'Fijn, ik laat gauw iets weten. Tot snel. 💌');
+  });
+
+  noBtn.addEventListener('click', () => {
+    submitAnswer('nee', 'Bericht verstuurd. (Weet je het zeker? 🥺)');
+  });
+
+  function launchHearts(){
+    const emojis = ['❤','♥','❥'];
+    for(let i=0; i<18; i++){
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        h.style.left = Math.random()*100 + 'vw';
+        h.style.top = '105vh';
+        h.style.fontSize = (14 + Math.random()*18) + 'px';
+        document.body.appendChild(h);
+
+        const duration = 3200 + Math.random()*1800;
+        const drift = (Math.random()-0.5) * 120;
+
+        h.animate([
+          { transform: 'translate(0,0) rotate(0deg)', opacity: 0.9 },
+          { transform: `translate(${drift}px, -110vh) rotate(${(Math.random()>0.5?1:-1)*180}deg)`, opacity: 0 }
+        ], { duration, easing: 'ease-out', fill: 'forwards' });
+
+        setTimeout(() => h.remove(), duration + 100);
+      }, i * 90);
+    }
+  }
+</script>
+
+</body>
+</html>
