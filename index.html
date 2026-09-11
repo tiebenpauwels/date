@@ -228,14 +228,13 @@
     <p class="fine">alleen voor wie het antwoord al weet 🤫</p>
   </div>
 
+<script src="secrets.js"></script>
 <script>
 
   /* ============================================================
-     VUL HIER DE JUISTE ANTWOORDEN IN
+     Waar de gebruiker heen gaat na een juist antwoord.
      ============================================================ */
-  const EXPECTED_NAME = "Anke";          // hoofdlettergevoelig maakt niet uit
-  const EXPECTED_DATE = "2026-08-13";           // formaat: JJJJ-MM-DD
-  const REDIRECT_URL  = "";                     // bv. "volgende-pagina.html" — leeg laten voor alleen een berichtje
+  const REDIRECT_URL = "date-invite.html";
 
   const form = document.getElementById('loginForm');
   const nameInput = document.getElementById('nameInput');
@@ -258,9 +257,9 @@
       message.textContent = "Welkom. Je mag naar binnen. 💌";
       message.classList.add('success', 'show');
       launchHearts();
-      if(REDIRECT_URL){
-        setTimeout(() => { window.location.href = REDIRECT_URL; }, 1400);
-      }
+      setTimeout(() => {
+        window.location.href = REDIRECT_URL + '?code=' + encodeURIComponent(SECRET_CODE);
+      }, 1000);
     } else {
       message.textContent = "Hmm, dat klopt nog niet helemaal. Probeer opnieuw.";
       message.classList.add('error', 'show');

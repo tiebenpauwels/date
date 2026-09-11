@@ -22,6 +22,7 @@
     --wine-deep: #1f7a7a;
     --blush: #f3b6d3;
     --gold: #b98fd1;
+    --error: #c0577a;
   }
 
   *{ box-sizing: border-box; }
@@ -204,10 +205,6 @@
     display:none;
   }
 
-  footer-note{
-    display:block;
-  }
-
   .fine{
     margin-top: 26px;
     font-size: 0.85rem;
@@ -215,23 +212,39 @@
     font-style: italic;
   }
 
+  /* ============================================================
+     Toegangscontrole: verbergt de pagina tot de code klopt
+     ============================================================ */
+  #accessCheck{
+    display:none;
+  }
+  #accessCheck.show{
+    display:block;
+  }
+
+  .denied{ display:none; }
+  .denied.show{ display:block; }
+  .denied p{ color: var(--error); font-family:'Caveat', cursive; font-size: 1.4rem; }
+  .denied a{ color: var(--wine); }
+
 </style>
 </head>
 <body>
+  <div class="card denied" id="denied">
+    <p class="eyebrow">hmm&hellip;</p>
+    <h1>Deze link klopt niet</h1>
+    <p>Ga terug en log opnieuw in.</p>
+    <p><a href="index.html">&larr; terug naar de loginpagina</a></p>
+  </div>
 
+  <div id="accessCheck">
   <div class="card" id="card">
     <p class="eyebrow">&ldquo;Love looks not with the eyes, but with the mind.&rdquo;</p>
     <p class="quote-source">&mdash; Shakespeare</p>
-    <h1>Heb je toevallig een gaatje voor mij deze week, [HAAR NAAM]?</h1>
-    <p class="from">&mdash; [JOUW NAAM]</p>
+    <h1>Heb je toevallig een gaatje voor mij deze week, ukkiee?</h1>
+    <p class="from">&mdash; Tiebsiee</p>
     <div class="divider"></div>
 
-    <!--
-      NETLIFY FORM
-      Zorg dat "Forms" aanstaat in je Netlify site settings (staat al aan volgens jou).
-      Netlify herkent dit formulier automatisch bij deploy dankzij data-netlify="true".
-      Stel de e-mailnotificatie in via: Site settings → Forms → Form notifications → Email notification.
-    -->
     <form
       id="dateForm"
       name="date-antwoord"
@@ -256,6 +269,16 @@
 
     <p class="fine">jouw antwoord wordt direct naar [JOUW NAAM] gestuurd</p>
   </div>
+  </div>
+
+<script src="secrets.js"></script>
+<script>z
+  const params = new URLSearchParams(window.location.search);
+  const givenCode = params.get('code') || '';
+  const isValid = givenCode === SECRET_CODE;
+
+  document.getElementById(isValid ? 'accessCheck' : 'denied').classList.add('show');
+</script>
 
 <script>
   const card = document.getElementById('card');
@@ -265,7 +288,6 @@
   const yesBtn = document.getElementById('yes');
   const noBtn = document.getElementById('no');
 
-  // "Nee"-knop loopt weg van de muis, blijft binnen de kaart
   noBtn.addEventListener('mousemove', () => {
     const maxX = 90, maxY = 24;
     const x = (Math.random() - 0.5) * 2 * maxX;
@@ -273,7 +295,7 @@
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
   });
 
-  // Op mobiel (geen hover): laat 'm ook wegspringen bij tik
+
   noBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const maxX = 70, maxY = 20;
@@ -290,7 +312,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(data).toString()
-    }).catch(() => { /* stille fout, we tonen sowieso het bedankscherm */ });
+    }).catch(() => {  });
 
     card.classList.add('confirmed');
     result.textContent = label;
