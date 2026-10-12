@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission 02 — The Secret Message</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --lavender: #eee9f7;
+      --paper: #fffdfb;
+      --teal: #548b87;
+      --teal-dark: #376c68;
+      --ink: #34313c;
+      --muted: #817b8a;
+      --pink: #e8b8ca;
+      --border: #e5ddec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 30px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 15% 15%, #f8e8f0 0, transparent 30%),
+        radial-gradient(circle at 85% 85%, #dcefeb 0, transparent 30%),
+        var(--lavender);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 650px;
+      padding: 38px 30px;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 24px;
+      box-shadow: 0 18px 55px rgba(68, 51, 85, .12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+
+    .status {
+      margin-bottom: 12px;
+      color: var(--teal-dark);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 8px 0 24px;
+      color: var(--muted);
+      font-family: "Caveat", cursive;
+      font-size: 1.6rem;
+    }
+
+    .letter {
+      margin: 0 auto 22px;
+      padding: 23px 22px;
+      background: #f8f5fb;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      text-align: left;
+      font-size: 1.3rem;
+      line-height: 1.5;
+    }
+
+    .letter p {
+      margin: 0 0 12px;
+    }
+
+    .letter p:last-child {
+      margin-bottom: 0;
+    }
+
+    .cipher-label {
+      margin: 25px 0 10px;
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+
+    .cipher {
+      margin: 0 0 22px;
+      padding: 20px 14px;
+      border: 1px dashed #c7b9d8;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--teal-dark);
+      font-family: monospace;
+      font-size: clamp(1rem, 3.5vw, 1.3rem);
+      font-weight: 700;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+      user-select: all;
+    }
+
+    .hint {
+      margin: 0 auto 20px;
+      padding: 12px 15px;
+      max-width: 470px;
+      border-radius: 12px;
+      background: #fdf2f6;
+      color: #785569;
+      font-size: 1.15rem;
+    }
+
+    .hint strong {
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 9px;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #d9d0e2;
+      border-radius: 12px;
+      background: white;
+      color: var(--ink);
+      font: 1.05rem "Cormorant Garamond", serif;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(84,139,135,.15);
+    }
+
+    button, .continue {
+      display: inline-block;
+      margin-top: 17px;
+      padding: 13px 25px;
+      border: none;
+      border-radius: 999px;
+      background: var(--teal);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .2s, background .2s;
+    }
+
+    button:hover, .continue:hover {
+      transform: translateY(-2px);
+      background: var(--teal-dark);
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin: 14px 0 0;
+      font-size: 1.15rem;
+    }
+
+    .error {
+      color: #b14e6b;
+    }
+
+    .success {
+      display: none;
+      margin-top: 25px;
+      padding: 23px 18px;
+      border: 1px solid #cce3dc;
+      border-radius: 16px;
+      background: #f0faf6;
+      animation: appear .5s ease both;
+    }
+
+    .success h2 {
+      margin: 0 0 8px;
+      color: var(--teal-dark);
+      font-size: 2rem;
+    }
+
+    .success p {
+      margin: 8px 0;
+      font-size: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .heart {
+      display: inline-block;
+      color: #d98eac;
+      font-size: 1.7rem;
+      animation: pulse 1.2s infinite;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 23px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      color: var(--teal-dark);
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 19px;
+      }
+
+      .letter {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="status">OPERATION: OUR STORY · MISSION 02/05</div>
+
+    <h1>The Secret Message</h1>
+    <p class="subtitle">Psssstttt, je bent nog ni klaar e....</p>
+
+    <section class="letter">
+      <p>Je bent wel mega goed bezig e lady</p>
+      <p>maar er is nog iets dat je moet weten...</p>
+      <p>Er is iemand met wie ik steeds meer herinneringen wil maken.</p>
+      <p>Mss best de boodschap ontcijferen zodat je weet over wat ik het heb</p>
+    </section>
+
+    <p class="cipher-label">DE GEHEIME BOODSCHAP</p>
+    <div class="cipher" id="cipher" aria-label="Versleutelde boodschap"></div>
+
+    <div class="hint">
+      🔎 <strong>Hint:</strong> Elke letter is 3 plaatsen vooruitgeschoven
+      in het alfabet. Zet elke letter dus 3 plaatsen terug.
+    </div>
+
+    <form id="answerForm">
+      <label for="answer">Wat is de ontcijferde boodschap?</label>
+      <input
+        id="answer"
+        type="text"
+        placeholder="Schrijf hier de geheime boodschap..."
+        autocomplete="off"
+        required
+      >
+      <button type="submit">Denk je het juist te hebben??</button>
+    </form>
+
+    <p class="feedback" id="feedback" aria-live="polite"></p>
+
+    <section class="success" id="success">
+      <span class="heart">♥</span>
+      <h2>Yippieeee, goed gedaannnnn</h2>
+      <p>Je hebt de geheime boodschap gevonden!</p>
+      <p><strong>Er is iemand met wie ik steeds meer herinneringen wil maken...</strong></p>
+      <p>Ahha, begint jouw brein wat wakker te worden??</p>
+      <a class="continue" href="mission3.html">Verder naar missie 3 →</a>
+    </section>
+
+    <a class="back" href="mission.html">← Terug naar missie 1</a>
+  </main>
+
+  <script>
+    const secretMessage =
+      "Er is iemand met wie ik steeds meer herinneringen wil maken. Ontdek de boodschap om te zien wie ik bedoel.";
+
+    // Versleutel elke letter door 3 plaatsen vooruit te schuiven.
+    function encodeCaesar(text, shift) {
+      return text.replace(/[a-z]/gi, letter => {
+        const base = letter === letter.toUpperCase() ? 65 : 97;
+        return String.fromCharCode(
+          ((letter.charCodeAt(0) - base + shift) % 26) + base
+        );
+      });
+    }
+
+    // Negeer hoofdletters, leestekens en extra spaties bij het controleren.
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[.,!?;:'"“”‘’…]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    document.getElementById("cipher").textContent =
+      encodeCaesar(secretMessage, 3);
+
+    document.getElementById("answerForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const answer = document.getElementById("answer").value;
+      const feedback = document.getElementById("feedback");
+      const success = document.getElementById("success");
+
+      if (normalize(answer) === normalize(secretMessage)) {
+        feedback.textContent = "";
+        success.style.display = "block";
+        document.getElementById("answerForm").style.display = "none";
+
+        success.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      } else {
+        feedback.textContent =
+          "Bijna, detective! 🔍 Controleer de code en probeer opnieuw.";
+        feedback.className = "feedback error";
+      }
+    });
+  </script>
+</body>
+</html>

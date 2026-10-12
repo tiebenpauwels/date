@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission 03 — The Compatibility Test</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --lavender: #eee9f7;
+      --paper: #fffdfb;
+      --teal: #548b87;
+      --teal-dark: #376c68;
+      --ink: #34313c;
+      --muted: #817b8a;
+      --pink: #e8b8ca;
+      --border: #e5ddec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 30px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 15% 15%, #f8e8f0 0, transparent 30%),
+        radial-gradient(circle at 85% 85%, #dcefeb 0, transparent 30%),
+        var(--lavender);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 650px;
+      padding: 38px 30px;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 24px;
+      box-shadow: 0 18px 55px rgba(68,51,85,.12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+
+    .status {
+      margin-bottom: 12px;
+      color: var(--teal-dark);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 7vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 8px 0 24px;
+      color: var(--muted);
+      font-family: "Caveat", cursive;
+      font-size: 1.6rem;
+    }
+
+    .intro {
+      margin: 0 0 23px;
+      font-size: 1.3rem;
+      line-height: 1.55;
+    }
+
+    .progress {
+      height: 7px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #eee8f3;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--teal);
+      transition: width .3s ease;
+    }
+
+    .question-number {
+      color: var(--teal-dark);
+      font-family: Arial, sans-serif;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      margin: 12px 0 22px;
+      font-size: 1.9rem;
+      font-weight: 600;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      width: 100%;
+      padding: 15px 17px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      color: var(--ink);
+      font: 1.2rem "Cormorant Garamond", serif;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .18s, border-color .18s, background .18s;
+    }
+
+    .answer:hover {
+      transform: translateY(-2px);
+      border-color: var(--teal);
+      background: #f3faf8;
+    }
+
+    .answer:focus-visible,
+    .continue:focus-visible,
+    .back:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px;
+    }
+
+    .reaction {
+      min-height: 52px;
+      margin: 20px 0 0;
+      color: var(--teal-dark);
+      font-family: "Caveat", cursive;
+      font-size: 1.55rem;
+    }
+
+    .next-button,
+    .continue {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 13px 25px;
+      border: none;
+      border-radius: 999px;
+      background: var(--teal);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .2s, background .2s;
+    }
+
+    .next-button:hover,
+    .continue:hover {
+      transform: translateY(-2px);
+      background: var(--teal-dark);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .result {
+      padding: 24px 20px;
+      border: 1px solid #cce3dc;
+      border-radius: 16px;
+      background: #f0faf6;
+      animation: appear .5s ease both;
+    }
+
+    .result h2 {
+      margin: 8px 0;
+      color: var(--teal-dark);
+      font-size: 2.1rem;
+    }
+
+    .result p {
+      font-size: 1.25rem;
+      line-height: 1.55;
+    }
+
+    .heart {
+      color: #d98eac;
+      font-size: 2rem;
+      animation: pulse 1.2s infinite;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      color: var(--teal-dark);
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="status">OPERATION: OUR STORY · MISSION 03/05</div>
+
+    <h1>The Compatibility Test</h1>
+    <p class="subtitle">Eens kijken wat ons volgend avontuur brengt :)</p>
+
+    <section id="quiz">
+      <p class="intro">
+        Finally brein wakker?? Klaar om wat vraagjes te beantwoorden over ons om te kijken of we klaar zijn voor ons volgend avontuur?
+        <br><br>
+        Btw er zijn geen foute antwoorden just that you know yk?
+      </p>
+
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="question-number" id="questionNumber"></div>
+      <h2 id="questionText"></h2>
+      <div class="answers" id="answers"></div>
+      <p class="reaction" id="reaction" aria-live="polite"></p>
+
+      <button class="next-button hidden" id="nextButton" type="button">
+        Volgende vraag →
+      </button>
+    </section>
+
+    <section class="result hidden" id="result">
+      <span class="heart">♥</span>
+      <h2>Compatibility: 100% 💕</h2>
+
+      <p>
+        Btw ik ben nog niet klaar om nog vele herinneringen te maken e, ik kijk daar mega hard naar uit om nog veel meer te doen dan nu!
+      </p>
+
+      <p>
+        En idc dat we soms is wat minder sturen/afspreken, jij blijft sws de belangrijkste tijdinvestering van mijn dag :)
+      </p>
+
+      <p><strong>Maar er wacht nog een volgende missie...</strong></p>
+
+      <a class="continue" href="mission4.html">
+        Ontgrendel missie 4 →
+      </a>
+    </section>
+
+    <a class="back" href="mission2.html">← Terug naar missie 2</a>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        question: "Wat klinkt als de leukste volgende date?",
+        answers: [
+          "Restaurantje doen zoals we al paar keer hebben gedaan (normaal meer maar ja we waren te lui whahaha)",
+          "Nog is spelletjes spelen samen?",
+          "OMG samen sterretjes kijken??",
+          "idk?"
+        ],
+        reactions: [
+          "We kunnn ofcc ook samen wat koken e",
+          "WHAHAHA kun je weer verliezen ykk",
+          "Kunnen we op je kot ook doen e ;) want jij bent ofc de belangrijkste sterrr",
+          "Alles met jou kan gewoon sow, als je niet echt een idee hebt dan scrollen we wel nog wat tik tok"
+        ]
+      },
+      {
+        question: "Wat maakt mij zo speciaal?",
+        answers: [
+          "De softy worden",
+          "Gentleman zijn ",
+          "yapsessies",
+          "Alles"
+        ],
+        reactions: [
+          "Ni pesten aub",
+          "Enkel voor jou ykkk",
+          "Kan nog meer weetje",
+          "Enigste juiste antwoord weetje"
+        ]
+      },
+      {
+        question: "En de belangrijkste vraag...",
+        answers: [
+            "Woeps nog geen vraag, ga maar naar volgende pagina ;)"    
+        ],
+        reactions: [
+          "volgende pagina gaan ajbbb"
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let selectedAnswer = null;
+
+    const questionNumber = document.getElementById("questionNumber");
+    const questionText = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answers");
+    const reaction = document.getElementById("reaction");
+    const nextButton = document.getElementById("nextButton");
+    const progressFill = document.getElementById("progressFill");
+
+    function showQuestion() {
+      const item = questions[currentQuestion];
+
+      selectedAnswer = null;
+      questionNumber.textContent =
+        `QUESTION ${currentQuestion + 1} / ${questions.length}`;
+      questionText.textContent = item.question;
+      answersContainer.innerHTML = "";
+      reaction.textContent = "";
+      nextButton.classList.add("hidden");
+
+      progressFill.style.width =
+        `${(currentQuestion / questions.length) * 100}%`;
+
+      item.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.textContent = answer;
+
+        button.addEventListener("click", () => {
+          selectedAnswer = index;
+
+          answersContainer.querySelectorAll("button").forEach(btn => {
+            btn.style.borderColor = "";
+            btn.style.background = "";
+          });
+
+          button.style.borderColor = "var(--teal)";
+          button.style.background = "#f0faf6";
+
+          reaction.textContent = item.reactions[index];
+          nextButton.classList.remove("hidden");
+        });
+
+        answersContainer.appendChild(button);
+      });
+    }
+
+    
+nextButton.addEventListener("click", () => {
+  if (selectedAnswer === null) return;
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    // Quiz verbergen en resultaat tonen
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+
+    // Terugknop verbergen is optioneel; laat deze gerust staan
+    // als je wilt dat ze terug kan naar missie 2.
+  }
+});
+
+
+    showQuestion();
+  </script>
+</body>
+</html>

@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 01 — Our Story</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --paper: #f3f1fa;
+  --paper-edge: #dcd3f0;
+  --ink: #2f2a3d;
+  --wine: #2ea0a0;
+  --wine-deep: #1f7a7a;
+  --gold: #b98fd1;
+  --error: #c0577a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 32px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at top left, #faf8fd 0%, var(--paper) 55%, var(--paper-edge) 100%);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  padding: 44px 32px;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  box-shadow: 0 30px 60px -20px rgba(58,42,46,0.3);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid var(--gold);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.eyebrow {
+  color: var(--wine);
+  font: 700 1.3rem 'Caveat', cursive;
+  margin: 0 0 8px;
+}
+
+h1 {
+  color: var(--wine-deep);
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  font-weight: 500;
+  font-style: italic;
+  margin: 0 0 12px;
+}
+
+.intro {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin: 0 auto 22px;
+  max-width: 400px;
+}
+
+.status {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  padding: 7px 12px;
+  color: var(--wine-deep);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+#timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  touch-action: pan-y;
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--paper-edge);
+  border-radius: 5px;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.event:active {
+  cursor: grabbing;
+}
+
+.event.dragging {
+  opacity: 0.4;
+}
+
+.event.drag-over {
+  border-color: var(--wine);
+  background: rgba(46,160,160,0.1);
+}
+
+.event:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--gold);
+  color: var(--wine-deep);
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.event-name {
+  flex: 1;
+  font-size: 1.15rem;
+}
+
+.drag-icon {
+  color: #9b8fae;
+  font-size: 1.2rem;
+}
+
+.hint {
+  margin-top: 18px;
+  padding: 12px;
+  text-align: left;
+  border-left: 2px solid var(--gold);
+  background: rgba(185,143,209,0.08);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+button {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 3px;
+  transition: 0.2s ease;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.primary {
+  background: var(--wine);
+  color: white;
+  border: 1px solid var(--wine);
+}
+
+.primary:hover {
+  background: var(--wine-deep);
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--wine-deep);
+}
+
+#feedback {
+  display: none;
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid var(--paper-edge);
+  line-height: 1.5;
+  animation: fadeUp 0.5s ease;
+}
+
+#feedback.show {
+  display: block;
+}
+
+#feedback.success {
+  border-color: var(--wine);
+  background: rgba(46,160,160,0.07);
+}
+
+#feedback.error {
+  border-color: var(--error);
+  background: rgba(192,87,122,0.06);
+}
+
+#nextMission {
+  display: none;
+  margin-top: 18px;
+}
+
+#nextMission.show {
+  display: block;
+}
+
+.fine {
+  margin-top: 26px;
+  color: #a99cc0;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 420px) {
+  .card {
+    padding: 36px 22px;
+  }
+
+  .event {
+    padding: 12px 9px;
+    gap: 8px;
+  }
+
+  .event-name {
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="card">
+  <p class="eyebrow">CLASSIFIED · MISSION 01</p>
+
+  <h1>Operation: Our Story</h1>
+
+  <p class="intro">
+    Woeps ik ben wat vergeetachtig geweest en euhm ja augurk weet niet echt meer wanneer we wat gedaan hebben?!?!<br>
+    Pws kan jij me wat helpen om deze missie te volbrengen zodat ik mijn geheugen terug kan rechtzetten??
+  </p>
+
+  <div class="status">MISSION 01 / 05</div>
+
+  <p class="section-title">
+    Kleine herinnering vanboven is oudste want euhm ja ik ben gewoon ouder :), van onder is het ineuwste
+  </p>
+
+  <div id="timeline" aria-label="Gebeurtenissen in chronologische volgorde"></div>
+
+  <div class="actions">
+    <button class="secondary" id="hintBtn" type="button">
+      Need a hint? 👀
+    </button>
+
+    <button class="primary" id="checkBtn" type="button">
+      Geheugen terug aanvullen
+    </button>
+  </div>
+
+  <div class="hint" id="hint" hidden>
+    Vraag mij maar gewoon, mss dat ik iets toch kan herinneren 
+  </div>
+
+  <div id="feedback" role="status" aria-live="polite"></div>
+
+  <div id="nextMission">
+    <p style="font-family:'Caveat',cursive;font-size:1.8rem;color:var(--wine);">
+      Geheugen hersteld, yippieeee
+    </p>
+
+    <p>Yess, goed gedaannnn. Klaar voor de volgende missie??</p>
+
+    <button class="primary" id="continueBtn" type="button">
+      Ga verder naar missie 2 ->
+    </button>
+  </div>
+
+  <p class="fine">A little story. A little mystery. A lot of memories.</p>
+</main>
+
+<script>
+/*
+  ======================================================
+  CONFIGURATION: PAS HIER DE JUISTE VOLGORDE AAN
+  ======================================================
+
+  Zet de oudste gebeurtenis op positie 1 en de nieuwste
+  op de laatste positie.
+
+  De lijst hieronder is voorlopig een VOORBEELD.
+  Ik ken jullie echte chronologie nog niet.
+
+  De namen moeten exact overeenkomen met de gebeurtenissen
+  hieronder in de EVENTS-lijst.
+*/
+
+const CORRECT_ORDER = [
+  "Elkaar leren kennen",
+  "Eerste keer bellen",
+  "Dendermonde",
+  "Mechelen",
+  "Arcade",
+  "McDonald's",
+  "Bowling"
+];
+
+/*
+  Dit is de lijst die door elkaar wordt getoond.
+  Je kunt hier ook foto's of extra beschrijvingen toevoegen.
+*/
+
+const EVENTS = [
+  "Arcade",
+  "Mechelen",
+  "Elkaar leren kennen",
+  "Bowling",
+  "Eerste keer bellen",
+  "Dendermonde",
+  "McDonald's"
+];
+
+/*
+  ======================================================
+  DRAG AND DROP
+  ======================================================
+*/
+
+const timeline = document.getElementById("timeline");
+const feedback = document.getElementById("feedback");
+const nextMission = document.getElementById("nextMission");
+
+let draggedItem = null;
+let completed = false;
+
+function shuffle(items) {
+  const result = [...items];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function renderTimeline(items) {
+  timeline.innerHTML = "";
+
+  items.forEach((name, index) => {
+    const item = document.createElement("div");
+
+    item.className = "event";
+    item.draggable = !completed;
+    item.tabIndex = 0;
+    item.dataset.name = name;
+
+    const number = document.createElement("span");
+    number.className = "number";
+    number.textContent = index + 1;
+
+    const label = document.createElement("span");
+    label.className = "event-name";
+    label.textContent = name;
+
+    const dragIcon = document.createElement("span");
+    dragIcon.className = "drag-icon";
+    dragIcon.textContent = "⠿";
+    dragIcon.setAttribute("aria-hidden", "true");
+
+    item.append(number, label, dragIcon);
+
+    item.addEventListener("dragstart", (event) => {
+      if (completed) {
+        event.preventDefault();
+        return;
+      }
+
+      draggedItem = item;
+      item.classList.add("dragging");
+
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", name);
+    });
+
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+
+      document.querySelectorAll(".event").forEach((el) => {
+        el.classList.remove("drag-over");
+      });
+
+      draggedItem = null;
+      updateNumbers();
+    });
+
+    item.addEventListener("dragover", (event) => {
+      event.preventDefault();
+
+      if (!draggedItem || draggedItem === item || completed) {
+        return;
+      }
+
+      item.classList.add("drag-over");
+    });
+
+    item.addEventListener("dragleave", () => {
+      item.classList.remove("drag-over");
+    });
+
+    item.addEventListener("drop", (event) => {
+      event.preventDefault();
+
+      item.classList.remove("drag-over");
+
+      if (!draggedItem || draggedItem === item || completed) {
+        return;
+      }
+
+      const rect = item.getBoundingClientRect();
+      const insertAfter =
+        event.clientY > rect.top + rect.height / 2;
+
+      if (insertAfter) {
+        item.after(draggedItem);
+      } else {
+        item.before(draggedItem);
+      }
+
+      updateNumbers();
+      clearFeedback();
+    });
+
+    // Alternatief voor toetsenbordgebruik:
+    // selecteer een kaart en gebruik de pijltjestoetsen.
+    item.addEventListener("keydown", (event) => {
+      if (completed) return;
+
+      const previous = item.previousElementSibling;
+      const next = item.nextElementSibling;
+
+      if (event.key === "ArrowUp" && previous) {
+        event.preventDefault();
+        previous.before(item);
+        updateNumbers();
+        clearFeedback();
+        item.focus();
+      }
+
+      if (event.key === "ArrowDown" && next) {
+        event.preventDefault();
+        next.after(item);
+        updateNumbers();
+        clearFeedback();
+        item.focus();
+      }
+    });
+
+    timeline.appendChild(item);
+  });
+
+  updateNumbers();
+}
+
+function updateNumbers() {
+  [...timeline.children].forEach((item, index) => {
+    item.querySelector(".number").textContent = index + 1;
+  });
+}
+
+function clearFeedback() {
+  if (completed) return;
+
+  feedback.className = "";
+  feedback.textContent = "";
+  nextMission.classList.remove("show");
+}
+
+function getCurrentOrder() {
+  return [...timeline.children].map((item) => item.dataset.name);
+}
+
+/*
+  ======================================================
+  CHECK THE ANSWER
+  ======================================================
+*/
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+  if (completed) return;
+
+  const currentOrder = getCurrentOrder();
+
+  const isCorrect =
+    currentOrder.length === CORRECT_ORDER.length &&
+    currentOrder.every((name, index) => name === CORRECT_ORDER[index]);
+
+  feedback.className = "show";
+
+  if (isCorrect) {
+    completed = true;
+
+    feedback.classList.add("success");
+    feedback.textContent =
+      "OMGGGG perfect gedaannnn";
+
+    nextMission.classList.add("show");
+
+    [...timeline.children].forEach((item) => {
+      item.draggable = false;
+      item.style.cursor = "default";
+    });
+
+    document.getElementById("checkBtn").disabled = true;
+    document.getElementById("hintBtn").disabled = true;
+  } else {
+    feedback.classList.add("error");
+    feedback.textContent =
+      "Not quite! 🥺 Some memories are out of order. Try again, or use a hint.";
+  }
+});
+
+/*
+  ======================================================
+  HINT
+  ======================================================
+*/
+
+document.getElementById("hintBtn").addEventListener("click", () => {
+  const hint = document.getElementById("hint");
+
+  hint.hidden = !hint.hidden;
+
+  document.getElementById("hintBtn").textContent =
+    hint.hidden ? "Need a hint? 👀" : "Hide hint";
+});
+
+/*
+  ======================================================
+  NEXT MISSION
+  ======================================================
+*/
+
+document.getElementById("continueBtn").addEventListener("click", () => {
+  window.location.href = "mission2.html";
+});
+
+/*
+  Start met een willekeurige volgorde.
+*/
+
+renderTimeline(shuffle(EVENTS));
+</script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission 04 — The Missing Pieces</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --lavender: #eee9f7;
+      --paper: #fffdfb;
+      --teal: #548b87;
+      --teal-dark: #376c68;
+      --ink: #34313c;
+      --muted: #817b8a;
+      --pink: #e8b8ca;
+      --border: #e5ddec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 30px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 15% 15%, #f8e8f0 0, transparent 30%),
+        radial-gradient(circle at 85% 85%, #dcefeb 0, transparent 30%),
+        var(--lavender);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 650px;
+      padding: 38px 30px;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 24px;
+      box-shadow: 0 18px 55px rgba(68,51,85,.12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+
+    .status {
+      margin-bottom: 12px;
+      color: var(--teal-dark);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 7vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 8px 0 24px;
+      color: var(--muted);
+      font-family: "Caveat", cursive;
+      font-size: 1.6rem;
+    }
+
+    .intro {
+      font-size: 1.3rem;
+      line-height: 1.55;
+    }
+
+    .letter {
+      margin: 25px 0;
+      padding: 25px 20px;
+      background: #f8f5fb;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-size: 1.45rem;
+      line-height: 2.2;
+    }
+
+    select {
+      display: inline-block;
+      max-width: 100%;
+      padding: 5px 27px 5px 9px;
+      border: 1px solid #c9b9d8;
+      border-radius: 9px;
+      background: white;
+      color: var(--teal-dark);
+      font: 600 1.1rem "Cormorant Garamond", serif;
+      cursor: pointer;
+    }
+
+    select:focus-visible,
+    button:focus-visible,
+    .continue:focus-visible,
+    .back:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px;
+    }
+
+    button, .continue {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 13px 25px;
+      border: none;
+      border-radius: 999px;
+      background: var(--teal);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .2s, background .2s;
+    }
+
+    button:hover, .continue:hover {
+      transform: translateY(-2px);
+      background: var(--teal-dark);
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin-top: 17px;
+      font-size: 1.2rem;
+    }
+
+    .error {
+      color: #b14e6b;
+    }
+
+    .success {
+      display: none;
+      margin-top: 25px;
+      padding: 24px 20px;
+      border: 1px solid #cce3dc;
+      border-radius: 16px;
+      background: #f0faf6;
+      animation: appear .5s ease both;
+    }
+
+    .success h2 {
+      margin: 8px 0;
+      color: var(--teal-dark);
+      font-size: 2.1rem;
+    }
+
+    .success p {
+      font-size: 1.25rem;
+      line-height: 1.55;
+    }
+
+    .heart {
+      color: #d98eac;
+      font-size: 2rem;
+      animation: pulse 1.2s infinite;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      color: var(--teal-dark);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 19px;
+      }
+
+      .letter {
+        padding: 20px 12px;
+        font-size: 1.25rem;
+      }
+
+      select {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="status">OPERATION: OUR STORY · MISSION 04/05</div>
+
+    <h1>The Missing Pieces</h1>
+    <p class="subtitle">Something is missing... can you complete it? 💌</p>
+
+    <section id="puzzle">
+      <p class="intro">
+        Je bent al ver geraakt laddyyy, 
+        maar je bent nog niet helemaal klaar tbhhh
+        <br><br>
+        Kies eff snel de juiste woorden want ik heb nog 1 laatste boodschap eig
+      </p>
+
+      <div class="letter">
+        Ik wil nog veel
+        <select id="word1" aria-label="Eerste ontbrekende woord">
+          <option value="">...</option>
+          <option value="dagen">dagen</option>
+          <option value="herinneringen">herinneringen</option>
+          <option value="cadeaus">cadeaus</option>
+        </select>
+        met jou maken,
+        <br>
+        bcsss jij laat mij gewoon mega
+        <select id="word2" aria-label="Tweede ontbrekende woord">
+          <option value="">...</option>
+          <option value="saai">saai</option>
+          <option value="bijzonder">bijzonder</option>
+          <option value="hetzelfde">hetzelfde</option>
+        </select> voelen.
+        <br>
+        En het liefst doe ik dat
+        <select id="word3" aria-label="Derde ontbrekende woord">
+          <option value="">...</option>
+          <option value="alleen">alleen</option>
+          <option value="ooit">ooit</option>
+          <option value="samen">samen</option>
+        </select>
+        met jou. ❤️
+      </div>
+
+      <button id="checkButton" type="button">
+        Controleer mijn antwoord 💗
+      </button>
+
+      <p class="feedback" id="feedback" aria-live="polite"></p>
+    </section>
+
+    <section class="success" id="success">
+      <span class="heart">♥</span>
+      <h2>All the pieces fit! 💕</h2>
+
+      <p>
+        Omggg you made itttt
+      </p>
+
+      <p>
+        Ik kijk er zo hard naar uit om je nog veel te ziennn.
+        En mss begint het na deze missie allemaal pas woepsss... ❤️
+      </p>
+
+      <p><strong>Klaar voor de laatste missie?</strong></p>
+
+      <a class="continue" href="mission5.html">
+        Ontgrendel missie 5 →
+      </a>
+    </section>
+
+    <a class="back" href="mission3.html">← Terug naar missie 3</a>
+  </main>
+
+  <script>
+    const checkButton = document.getElementById("checkButton");
+    const feedback = document.getElementById("feedback");
+
+    checkButton.addEventListener("click", () => {
+      const word1 = document.getElementById("word1").value;
+      const word2 = document.getElementById("word2").value;
+      const word3 = document.getElementById("word3").value;
+
+      if (!word1 || !word2 || !word3) {
+        feedback.textContent =
+          "Vul eerst alle drie de ontbrekende woorden in. 💌";
+        feedback.className = "feedback error";
+        return;
+      }
+
+      if (
+        word1 === "herinneringen" &&
+        word2 === "bijzonder" &&
+        word3 === "samen"
+      ) {
+        document.getElementById("puzzle").classList.add("hidden");
+        document.getElementById("success").style.display = "block";
+      } else {
+        feedback.textContent =
+          "Niet helemaal, detective! 🔍 Probeer nog eens.";
+        feedback.className = "feedback error";
+      }
+    });
+  </script>
+</body>
+</html>

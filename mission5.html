@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission 05 — The Final Question</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --lavender: #eee9f7;
+      --paper: #fffdfb;
+      --teal: #548b87;
+      --teal-dark: #376c68;
+      --ink: #34313c;
+      --muted: #817b8a;
+      --pink: #e8b8ca;
+      --border: #e5ddec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 30px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 15% 15%, #f8e8f0 0, transparent 30%),
+        radial-gradient(circle at 85% 85%, #dcefeb 0, transparent 30%),
+        var(--lavender);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+      overflow-x: hidden;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 680px;
+      padding: 40px 30px;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 24px;
+      box-shadow: 0 18px 55px rgba(68,51,85,.12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+
+    .status {
+      margin-bottom: 15px;
+      color: var(--teal-dark);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 10px 0 25px;
+      color: var(--muted);
+      font-family: "Caveat", cursive;
+      font-size: 1.7rem;
+    }
+
+    .envelope {
+      width: 100px;
+      height: 100px;
+      margin: 10px auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f9edf3;
+      font-size: 3.3rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .message {
+      margin: 0 auto 25px;
+      max-width: 520px;
+      font-size: 1.35rem;
+      line-height: 1.7;
+    }
+
+    .message p {
+      margin: 0 0 15px;
+    }
+
+    .final-question {
+      margin: 28px 0;
+      color: var(--teal-dark);
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    button {
+      padding: 14px 23px;
+      border: none;
+      border-radius: 999px;
+      font-family: Arial, sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .2s, background .2s;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+    }
+
+    button:focus-visible,
+    .back:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px;
+    }
+
+    .yes-button {
+      background: var(--teal);
+      color: white;
+    }
+
+    .yes-button:hover {
+      background: var(--teal-dark);
+    }
+
+    .time-button {
+      background: #f6eaf1;
+      color: #79566c;
+    }
+
+    .time-button:hover {
+      background: #f0dce7;
+    }
+
+    .no-button {
+      background: #f0edf4;
+      color: #635b6b;
+    }
+
+    .no-button:hover {
+      background: #e5deed;
+    }
+
+    .result {
+      display: none;
+      margin-top: 28px;
+      padding: 25px 20px;
+      border: 1px solid #cce3dc;
+      border-radius: 18px;
+      background: #f0faf6;
+      animation: appear .6s ease both;
+    }
+
+    .result h2 {
+      margin: 10px 0;
+      color: var(--teal-dark);
+      font-size: 2.3rem;
+    }
+
+    .result p {
+      font-size: 1.3rem;
+      line-height: 1.6;
+    }
+
+    .big-heart {
+      color: #d98eac;
+      font-size: 3rem;
+      animation: pulse 1.2s infinite;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .back:hover {
+      color: var(--teal-dark);
+    }
+
+    .floating-heart {
+      position: fixed;
+      bottom: -40px;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      animation: rise 6s linear forwards;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: .8; }
+      100% {
+        transform: translateY(-110vh) rotate(35deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 34px 19px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="status">OPERATION: OUR STORY · MISSION 05/05</div>
+
+    <h1>The Final Question</h1>
+    <p class="subtitle">Every story has a moment that changes everything... ❤️</p>
+
+    <div class="envelope" aria-hidden="true">💌</div>
+
+    <section id="opening">
+      <div class="message">
+        <p>Je hebt alle vijf de missies bereikt. 🥹</p>
+
+        <p>
+          Van wat we tot nu toe al samen hebben meegemaakt, naar een geheime boodschap.
+          Ik hoop dat je echt begint te beseffen hoeveel je voor me betekent eigenlijk
+        </p>
+
+        <p>
+          En ik weet niet echt wat er na vandaag gaat gebeuren, 
+          maar weet gewoon dak die samen met jou wil beleven
+        </p>
+
+        <p>
+          Dus heb ik nog één laatste vraag voor jou...
+        </p>
+      </div>
+
+      <h2 class="final-question">
+        Wil stel 2 echt maken??
+      </h2>
+
+      <div class="buttons">
+        <button class="yes-button" id="yesButton" type="button">
+          Ja, laat stel 2 maar komen :)
+        </button>
+
+        <button class="time-button" id="timeButton" type="button">
+          Nog eff nadenken voor meer tijd??
+        </button>
+
+        <button class="no-button" id="noButton" type="button">
+          Euhm nee :(
+        </button>
+      </div>
+    </section>
+
+    <section class="result" id="yesResult" aria-live="polite">
+      <div class="big-heart">♥</div>
+      <h2>Dit is het begin van ons verhaal! 💕</h2>
+
+      <p>
+        Je hebt geen ideee hoe blij ik ben atppp
+      </p>
+
+      <p>
+        Ik kijk ernaar uit om samen nog meer herinneringen te maken,
+        nog meer te lachen en te ontdekken wat er allemaal op ons pad komt.
+      </p>
+
+      <p>
+        <strong>Thanksss om deze kans te geven eee</strong>
+      </p>
+
+      <p style="font-family: 'Caveat', cursive; font-size: 1.8rem;">
+        To be continued... ♡
+      </p>
+    </section>
+
+    <section class="result" id="timeResult" aria-live="polite">
+      <div class="big-heart">💌</div>
+      <h2>Neem rustig je tijd</h2>
+
+      <p>
+        Weet gewoon dak nog kan wachten e, want ik wil echt een toekomst met jou ofcc
+      </p>
+
+      <p>
+        Wat je ook wilt, ik respecteer het altijd :)
+      </p>
+
+      <button class="time-button" id="backButton" type="button">
+        Terug naar de vraag
+      </button>
+    </section>
+
+    <section class="result" id="noResult" aria-live="polite">
+      <div class="big-heart">💗</div>
+      <h2>Ty om het toch een kans gegeven te hebben</h2>
+
+      <p>
+        Ik wens je alleen maar het beste. ❤️
+      </p>
+    </section>
+
+    <a class="back" href="mission4.html" id="backToMission">
+      ← Terug naar missie 4
+    </a>
+  </main>
+
+  <script>
+    const opening = document.getElementById("opening");
+    const yesResult = document.getElementById("yesResult");
+    const timeResult = document.getElementById("timeResult");
+    const noResult = document.getElementById("noResult");
+    const backToMission = document.getElementById("backToMission");
+
+    function hideAllResults() {
+      yesResult.style.display = "none";
+      timeResult.style.display = "none";
+      noResult.style.display = "none";
+    }
+
+    function showResult(result) {
+      opening.classList.add("hidden");
+      hideAllResults();
+
+      result.style.display = "block";
+      backToMission.classList.add("hidden");
+
+      result.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+
+    function createHearts() {
+      const symbols = ["♥", "♡", "💕", "💗"];
+
+      for (let i = 0; i < 28; i++) {
+        const heart = document.createElement("span");
+        heart.className = "floating-heart";
+        heart.textContent =
+          symbols[Math.floor(Math.random() * symbols.length)];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (16 + Math.random() * 22) + "px";
+        heart.style.animationDelay = (Math.random() * 2) + "s";
+        heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+        document.body.appendChild(heart);
+
+        heart.addEventListener("animationend", () => {
+          heart.remove();
+        });
+      }
+    }
+
+    document.getElementById("yesButton").addEventListener("click", () => {
+      showResult(yesResult);
+      createHearts();
+    });
+
+    document.getElementById("timeButton").addEventListener("click", () => {
+      showResult(timeResult);
+    });
+
+    document.getElementById("noButton").addEventListener("click", () => {
+      showResult(noResult);
+    });
+
+    document.getElementById("backButton").addEventListener("click", () => {
+      hideAllResults();
+      opening.classList.remove("hidden");
+      backToMission.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
