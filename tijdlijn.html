@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Onze rode draad</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:wght@400;600&display=swap">
+    <style>
+        :root {
+            --sky1: #2a2250;
+            --sky2: #6b3a6e;
+            --sky3: #e58a8a;
+            --thread: #ff8fa3;
+            --paper: #fff8f0;
+            --ink: #3b2a33;
+            --date: #c2415d;
+            --hi: #fff;
+            --sub: #f6dfe6;
+            --peg: #d9a066;
+            --h1: #4a2a6e;
+            --h2: #8a3f86;
+            --h3: #2f2a5e;
+            --star: #fff;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        @media (prefers-color-scheme:light) {
+            :root:not([data-theme="dark"]) {
+                --sky1: #ffd9d2;
+                --sky2: #ffc2cf;
+                --sky3: #fff1e6;
+                --thread: #d6385a;
+                --hi: #4a2433;
+                --sub: #7a4a5a;
+                --date: #b02a4a;
+                --h1: #ffb3c1;
+                --h2: #ffd08a;
+                --h3: #c9a8ff;
+                --star: rgba(255, 255, 255, .95)
+            }
+        }
+
+        :root[data-theme="light"] {
+            --sky1: #ffd9d2;
+            --sky2: #ffc2cf;
+            --sky3: #fff1e6;
+            --thread: #d6385a;
+            --hi: #4a2433;
+            --sub: #7a4a5a;
+            --date: #b02a4a;
+            --h1: #ffb3c1;
+            --h2: #ffd08a;
+            --h3: #c9a8ff;
+            --star: rgba(255, 255, 255, .95)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--sky1), var(--sky2) 60%, var(--sky3));
+            font-family: "Lora", Georgia, serif;
+            color: var(--hi);
+            overflow: hidden
+        }
+
+        #prog {
+            position: fixed;
+            left: 0;
+            top: env(safe-area-inset-top, 0px);
+            height: 3px;
+            width: 0;
+            background: var(--thread);
+            z-index: 5
+        }
+
+        #sc {
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none
+        }
+
+        #sc::-webkit-scrollbar {
+            display: none
+        }
+
+        #tl {
+            position: relative;
+            height: 100%;
+            min-height: 600px
+        }
+
+        svg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 260px;
+            overflow: visible
+        }
+
+        #th {
+            fill: none;
+            stroke: url(#g);
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 6px var(--thread));
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: draw 2.8s ease-out .2s forwards
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0
+            }
+        }
+
+        .intro {
+            position: absolute;
+            left: 40px;
+            top: 210px;
+            width: 300px
+        }
+
+        .intro h1 {
+            font-family: "Caveat", cursive;
+            font-size: 3.6rem;
+            line-height: 1;
+            margin: 0 0 10px;
+            font-weight: 700
+        }
+
+        .intro p {
+            margin: 0;
+            color: var(--sub);
+            line-height: 1.5
+        }
+
+        .intro small {
+            display: block;
+            margin-top: 18px;
+            color: var(--sub);
+            opacity: .8
+        }
+
+        .pin {
+            position: absolute;
+            width: 220px;
+            transform-origin: 50% 0;
+            transform: rotate(var(--r));
+            transition: transform .5s cubic-bezier(.3, 1.6, .5, 1)
+        }
+
+        .pin:hover,
+        .pin:focus-visible {
+            transform: rotate(calc(var(--r) * -1.6)) translateY(4px);
+            outline: none
+        }
+
+        .peg {
+            position: absolute;
+            left: 50%;
+            top: -10px;
+            width: 12px;
+            height: 30px;
+            margin-left: -6px;
+            background: var(--c, var(--peg));
+            border-radius: 3px;
+            z-index: 2;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .3)
+        }
+
+        .peg::after {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 4px;
+            width: 2px;
+            height: 22px;
+            background: rgba(0, 0, 0, .25)
+        }
+
+        .print {
+            background: var(--paper);
+            color: var(--ink);
+            padding: 10px 10px 14px;
+            border-radius: 3px;
+            border-bottom: 7px solid var(--c);
+            box-shadow: 0 12px 22px rgba(0, 0, 0, .35)
+        }
+
+        .ph {
+            width: 100%;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            font-size: 3rem;
+            object-fit: cover;
+            border-radius: 2px
+        }
+
+        .date {
+            font-family: "Caveat", cursive;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--c, var(--date));
+            margin: 8px 0 0;
+            line-height: 1
+        }
+
+        .title {
+            font-weight: 600;
+            margin: 4px 0 0;
+            font-size: .98rem
+        }
+
+        .txt {
+            margin: 3px 0 0;
+            font-size: .86rem;
+            line-height: 1.45
+        }
+
+        .end {
+            position: absolute;
+            top: 210px;
+            width: 260px;
+            text-align: center
+        }
+
+        .end b {
+            display: block;
+            font-size: 4rem;
+            color: var(--thread);
+            line-height: 1;
+            animation: beat 1.6s ease-in-out infinite
+        }
+
+        .end span {
+            font-family: "Caveat", cursive;
+            font-size: 1.9rem
+        }
+
+        @keyframes beat {
+            50% {
+                transform: scale(1.15)
+            }
+        }
+
+        #tl {
+            background-image: radial-gradient(1.5px 1.5px at 20px 30px, var(--star), transparent), radial-gradient(1px 1px at 90px 120px, var(--star), transparent), radial-gradient(2px 2px at 160px 70px, var(--star), transparent);
+            background-size: 230px 200px, 170px 240px, 310px 180px;
+            background-repeat: repeat-x
+        }
+
+        .sun {
+            position: fixed;
+            right: 6vw;
+            top: calc(env(safe-area-inset-top, 0px) + 28px);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #fffbe0, #ffe08a);
+            box-shadow: 0 0 40px 12px rgba(255, 224, 138, .5);
+            pointer-events: none
+        }
+
+        .hill {
+            top: auto;
+            bottom: 0;
+            pointer-events: none
+        }
+
+        .fl {
+            position: absolute;
+            bottom: -40px;
+            opacity: .75;
+            animation: up linear infinite;
+            pointer-events: none
+        }
+
+        @keyframes up {
+            to {
+                transform: translateY(-110vh) rotate(25deg);
+                opacity: 0
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            .fl {
+                display: none
+            }
+
+            #th {
+                animation: none;
+                stroke-dashoffset: 0
+            }
+
+            .end b {
+                animation: none
+            }
+
+            .pin {
+                transition: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sun" aria-hidden="true"></div>
+    <div id="prog"></div>
+    <div id="sc">
+        <div id="tl"></div>
+    </div>
+    <script>
+        // NIEUW MOMENT TOEVOEGEN: kopieer een regel hieronder, zet er een komma achter en pas aan.
+        // d = datum, t = titel, x = tekstje. Optioneel: img:"foto.jpg" voor een echte foto, e = emoji.
+        // Er is geen limiet: de tijdlijn, de draad en de achtergrond worden vanzelf langer.
+        var E = [
+            { d: "14 februari 2021", t: "Onze eerste date", x: "Zenuwachtig in een klein cafeetje, en toch voelde het meteen goed.", e: "☕", a: "#f6b8c4", b: "#e98aa0", r: -3 },
+            { d: "3 juli 2021", t: "Ons eerste uitstapje", x: "Een dagje aan zee. Zand in alles, glimlach overal.", e: "🌊", a: "#a9d6e5", b: "#6fb1cc", r: 2.5 },
+            { d: "25 december 2021", t: "Eerste kerst samen", x: "Veel te veel eten en de beste cadeautjes.", e: "🎄", a: "#b5d8b0", b: "#7fb985", r: -2 },
+            { d: "12 augustus 2022", t: "Onze eerste reis", x: "Verdwaald, gelachen, en de mooiste zonsondergang gezien.", e: "✈️", a: "#ffd6a5", b: "#f4a261", r: 3 },
+            { d: "1 maart 2023", t: "Samen gaan wonen", x: "Dozen, verf en onze eerste avond in ons eigen huis.", e: "🏡", a: "#d4c1ec", b: "#a78bd0", r: -2.5 }
+        ];
+        var X0 = 440, STEP = 290, W = X0 + E.length * STEP + 260, tl = document.getElementById("tl");
+        tl.style.width = W + "px";
+        var pts = [{ x: 0, y: 90 }], h = "";
+        var cols = ["#e8486b", "#e8801a", "#1f9d6b", "#2f7fd8", "#8a4fd6", "#d4a017"];
+        E.forEach(function (e, i) { e.px = X0 + i * STEP; e.py = i % 2 ? 150 : 80; e.c = cols[i % cols.length]; e.r = e.r || (i % 2 ? 2.5 : -2.5); e.e = e.e || "💗"; e.a = e.a || "#f6b8c4"; e.b = e.b || "#e98aa0"; pts.push({ x: e.px, y: e.py }) });
+        pts.push({ x: W, y: 110 });
+        var dd = "M" + pts[0].x + "," + pts[0].y;
+        for (var i = 1; i < pts.length; i++) { var p = pts[i - 1], q = pts[i], m = (q.x - p.x) / 2; dd += " C" + (p.x + m) + "," + p.y + " " + (q.x - m) + "," + q.y + " " + q.x + "," + q.y }
+        function hill(mid, amp, off, col) { var d = "M0,170"; for (var x = 0; x <= W; x += 40)d += " L" + x + "," + (mid + Math.sin(x / (220 + off * 30) + off) * amp); return '<svg class="hill" viewBox="0 0 ' + W + ' 170" preserveAspectRatio="none" style="width:' + W + 'px;height:170px"><path d="' + d + ' L' + W + ',170Z" fill="var(' + col + ')"/></svg>' }
+        h += hill(70, 26, 1, "--h3") + hill(100, 20, 2.5, "--h1") + hill(130, 14, 4, "--h2");
+        var fe = ["💗", "✨", "🎈", "💛", "🌸", "⭐"];
+        for (var k = 0; k < Math.round(W / 230); k++) { h += '<span class="fl" aria-hidden="true" style="left:' + Math.round(Math.random() * W) + 'px;font-size:' + (1 + Math.random() * 1.2).toFixed(1) + 'rem;animation-duration:' + (14 + Math.random() * 16).toFixed(0) + 's;animation-delay:-' + (Math.random() * 24).toFixed(0) + 's">' + fe[k % fe.length] + '</span>' }
+        h += '<svg viewBox="0 0 ' + W + ' 260" preserveAspectRatio="none" style="width:' + W + 'px"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" x2="' + W + '" y1="0" y2="0"><stop offset="0" stop-color="#ff7eb3"/><stop offset=".25" stop-color="#ffb347"/><stop offset=".5" stop-color="#7ee8a2"/><stop offset=".75" stop-color="#6ec6ff"/><stop offset="1" stop-color="#c58bff"/></linearGradient></defs><path id="th" pathLength="1" d="' + dd + '"/></svg>';
+        h += '<div class="intro"><h1>Onze rode draad</h1><p>Alles wat ons samen maakte, aan één draad gehangen.</p><small>Scroll naar rechts →</small></div>';
+        E.forEach(function (e, i) {
+            var im = e.img ? '<img class="ph" alt="' + e.t + '" src="' + e.img + '">' : '<div class="ph" role="img" aria-label="Plaatshouder foto" style="background:linear-gradient(135deg,' + e.a + ',' + e.b + ')">' + e.e + '</div>';
+            h += '<div class="pin" tabindex="0" style="left:' + (e.px - 110) + 'px;top:' + (e.py + 2) + 'px;--r:' + e.r + 'deg;--c:' + e.c + '"><i class="peg"></i><div class="print">' + im + '<div class="date">' + e.d + '</div><div class="title">' + e.t + '</div><p class="txt">' + e.x + '</p></div></div>'
+        });
+        h += '<div class="end" style="left:' + (W - 340) + 'px"><b>♥</b><span>En het verhaal gaat verder…</span></div>';
+        tl.innerHTML = h;
+        var sc = document.getElementById("sc"), pr = document.getElementById("prog");
+        sc.addEventListener("scroll", function () { pr.style.width = (sc.scrollLeft / (sc.scrollWidth - sc.clientWidth || 1) * 100) + "%" });
+        sc.addEventListener("wheel", function (ev) { if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { sc.scrollLeft += ev.deltaY; ev.preventDefault() } }, { passive: false });
+    </script>
+</body>
+
+</html>
